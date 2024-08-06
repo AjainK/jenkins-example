@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="1a96e773-6f7c-4467-9d25-2fb61548db3b" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="80ac422e-3071-4e4e-a545-9cdb11b47f94" >
+		<http:request-connection protocol="HTTPS" host="fake-json-api.mock.beeceptor.com" />
+	</http:request-config>
+	<flow name="jenkins-example-flow" doc:id="787c1117-62e8-4885-9d71-fa8dbaa68e1f" maxConcurrency="1">
+		<http:listener doc:name="http listener" doc:id="be9e922f-baf0-46be-bec6-f4e2484f665e" config-ref="HTTP_Listener_config" path="/*"/>
+		<logger level="INFO" doc:name="flow start" doc:id="9a85b0aa-f668-4005-abe7-c547e456675d" message="flow start" category="jenkins-example-flow"/>
+		<http:request method="GET" doc:name="fake json api mock request" doc:id="dc63ff21-34cc-44c1-abdf-359bb04de90d" config-ref="HTTP_Request_configuration" path="#[attributes.requestUri]">
+		</http:request>
+		<ee:transform doc:name="capture response" doc:id="8f8fb64e-fd95-4955-afc7-08fa18cf8bc7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="flow complete" doc:id="68d068ed-2776-436e-b322-8394f0b799fc" message="flow complete" category="jenkins-example-flow" />
+	</flow>
+</mule>
