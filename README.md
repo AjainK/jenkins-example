@@ -31,14 +31,32 @@ Steps to automate code deployment in jenkins
 
 => Install Build pipeline plugin
 => Create a new pipeline
-=>Select Initial Job => Code checkout
-=> Go to Code checkout job and Post Build Actions -> Projects to Build -> Select Build and save.
+=> Initial Job => Code checkout
+=> Go to Code checkout job and Post Build Actions -> Projects to Build -> Select Build job and save.
+=>Test the pipeline by changing code and pushing to repo. 
+=>This in turn will trigger the pipeline
 
-6. Test the pipeline by changing code and pushing to repo.
-This inturn will trigger the pipeline
+7. Deploy to cloudhub
+
+=> Add cloudhub configurations under mule maven plugin under pom.xml
+=> Configure username and password, environment,workers, workerType,applicationName,muleVersion,password
+=> Create new job for deploy
+=> Under Advanced -> Select Use Custom Workspace ->  Provide the directory path where the code has been checked out.
+=> Build step -> mvn package deploy -DmuleDeploy and save
+=> Add deploy step to the  pipeline (Go to Build job , configure -> Post Build action and choose Deploy Job and save).
 
 
 
+
+
+Overall Setup Steps :
+
+1. Create a job to pick the code from repo and checkout to a directory we want. 
+2. Create a job to run maven install on the checkedout directory.
+3. Create a job to run mvn deploy .
+4. Create a pipeline - Point Initial Job to the checkout job.
+5. In the code checkout job and under Post Build Actions and choose the build job.
+6. In the Build Job under Post Build Actions code the deploy job.
 
 
 
